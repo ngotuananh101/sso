@@ -42,6 +42,19 @@ jobs:
 
       - name: Build and deploy
         run: |
-          rsync -avz --delete --exclude='.git/' --exclude='.github/' --stats --timeout=120 \
+          rsync -avz --delete --exclude='.git/' --exclude='.github/' \
+            --no-perms --no-owner --no-group --size-only \
+            --stats --timeout=180 \
             -e "ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa" \
             ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.SERVER_PATH }}
+      - name: Update ownership to www
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "chown -R www:www ${{ secrets.SERVER_PATH }}"
+      - name: Update permissions 775 for directories and 644 for files
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "find ${{ secrets.SERVER_PATH }} -type d -exec chmod 775 {} \; && find ${{ secrets.SERVER_PATH }} -type f -exec chmod 644 {} \;"
+
