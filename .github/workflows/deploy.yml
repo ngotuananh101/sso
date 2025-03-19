@@ -54,7 +54,7 @@ jobs:
         run: |
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-            "cd ${{ secrets.SERVER_PATH }} && php artisan migrate"
+            "cd ${{ secrets.SERVER_PATH }} && yes | php artisan migrate"
 
       - name: Update ownership to www
         run: |
