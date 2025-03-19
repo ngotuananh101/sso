@@ -22,7 +22,7 @@ jobs:
       - name: Upload files
         run: |
           rsync -avz --delete --exclude='.git/' --exclude='node_modules/' --exclude='vendor/' \
-            --exclude='.github/' --stats --timeout=120 \
+            --exclude='.github/' --exclude='public/.user.ini'  --stats --timeout=120 \
             -e "ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa" \
             ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.SERVER_PATH }}
 
