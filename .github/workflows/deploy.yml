@@ -19,6 +19,12 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
+      - name: Clean node_modules on server
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "cd ${{ secrets.SERVER_PATH }} && rm -rf node_modules"
+
       - name: Upload files
         run: |
           rsync -avz --delete --exclude='.git/' --exclude='node_modules/' --exclude='vendor/' \
@@ -61,4 +67,3 @@ jobs:
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
             "find ${{ secrets.SERVER_PATH }} -type d -exec chmod 775 {} \; && find ${{ secrets.SERVER_PATH }} -type f -exec chmod 644 {} \;"
-
