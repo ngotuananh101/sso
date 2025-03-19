@@ -28,7 +28,8 @@ jobs:
       - name: Upload files
         run: |
           rsync -avz --delete --exclude='.git/' --exclude='node_modules/' --exclude='vendor/' \
-            --exclude='.github/' --exclude='public/.user.ini'  --stats --timeout=120 \
+            --exclude='.github/' --exclude='public/.user.ini' --exclude='.env' \
+            --stats --timeout=120 \
             -e "ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa" \
             ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.SERVER_PATH }}
 
@@ -42,7 +43,7 @@ jobs:
         run: |
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-            "cd ${{ secrets.SERVER_PATH }} && composer install --no-dev --optimize-autoloader"
+            "cd ${{ secrets.SERVER_PATH }} && export COMPOSER_ALLOW_SUPERUSER=1 && composer install --no-dev --optimize-autoloader"
 
       - name: Build assets
         run: |
