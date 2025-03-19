@@ -12,27 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install node dependencies
-        run: npm ci
-
-      - name: Build node dependencies
-        run: npm run build
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          tools: composer
-
-      - name: Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader
-
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
@@ -40,18 +19,43 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Build and deploy
+      - name: Upload files
         run: |
-          rsync -avz --delete --exclude='.git/' --exclude='.github/' \
-            --no-perms --no-owner --no-group --size-only \
-            --stats --timeout=180 \
+          rsync -avz --delete --exclude='.git/' --exclude='node_modules/' --exclude='vendor/' \
+            --exclude='.github/' --stats --timeout=120 \
             -e "ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa" \
             ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.SERVER_PATH }}
+
+      - name: Install node dependencies
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "cd ${{ secrets.SERVER_PATH }} && npm install"
+
+      - name: Install composer dependencies
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "cd ${{ secrets.SERVER_PATH }} && composer install --no-dev --optimize-autoloader"
+
+      - name: Build assets
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "cd ${{ secrets.SERVER_PATH }} && npm run build"
+
+      - name: Run database migrations
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+            "cd ${{ secrets.SERVER_PATH }} && php artisan migrate"
+
       - name: Update ownership to www
         run: |
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
             "chown -R www:www ${{ secrets.SERVER_PATH }}"
+
       - name: Update permissions 775 for directories and 644 for files
         run: |
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
