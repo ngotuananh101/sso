@@ -28,7 +28,7 @@ jobs:
       - name: Upload files
         run: |
           rsync -avz --delete --exclude='.git/' --exclude='node_modules/' --exclude='vendor/' \
-            --exclude='.github/' --exclude='public/.user.ini' --exclude='.env' \
+            --exclude='.github/' --exclude='**/.user.ini' --exclude='.env' \
             --stats --timeout=120 \
             -e "ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa" \
             ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.SERVER_PATH }}
@@ -61,10 +61,10 @@ jobs:
         run: |
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-            "chown -R www:www ${{ secrets.SERVER_PATH }}"
+            "find ${{ secrets.SERVER_PATH }} -not -name '.user.ini' -exec chown www:www {} \\;"
 
       - name: Update permissions 775 for directories and 644 for files
         run: |
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-            "find ${{ secrets.SERVER_PATH }} -type d -exec chmod 775 {} \\; && find ${{ secrets.SERVER_PATH }} -type f -not -path \"${{ secrets.SERVER_PATH }}/public/.user.ini\" -exec chmod 644 {} \\;"
+            "find ${{ secrets.SERVER_PATH }} -type d -exec chmod 775 {} \\; && find ${{ secrets.SERVER_PATH }} -type f -not -name '.user.ini' -exec chmod 644 {} \\;"
