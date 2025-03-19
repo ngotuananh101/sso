@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'root_url' => env('APP_ROOT_URL', 'https://ponta.dev'),
 
     /*
     |--------------------------------------------------------------------------

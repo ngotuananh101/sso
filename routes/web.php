@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Redirect all other routes to the root URL
+Route::get('/{any}', function () {
+    return response()->redirectTo(config('app.root_url'));
+})->where('any', '.*');
