@@ -67,4 +67,4 @@ jobs:
         run: |
           ssh -p ${{ secrets.SERVER_PORT }} -i ~/.ssh/id_rsa \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-            "find ${{ secrets.SERVER_PATH }} -type d -exec chmod 775 {} \; && find ${{ secrets.SERVER_PATH }} -type f -not -path \"***/public/.user.ini\" -exec chmod 644 {} \;"
+            "find ${{ secrets.SERVER_PATH }} -type d -exec chmod 775 {} \\; && find ${{ secrets.SERVER_PATH }} -type f -not -path \"${{ secrets.SERVER_PATH }}/public/.user.ini\" -exec chmod 644 {} \\;"
