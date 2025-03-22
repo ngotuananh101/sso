@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 
 // Redirect all other routes to the root URL
