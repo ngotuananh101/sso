@@ -11,19 +11,20 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Seed system user
-        User::factory()->create([
+        User::create([
             'name' => 'System',
             'username' => 'system',
             'email' => 'system@localhost',
         ]);
 
         // Seed admin user
-        User::factory()->create([
+        User::create([
             'name' => 'Ngo Tuan Anh',
             'username' => 'ngotuananh2101',
             'email' => 'anhnt@ponta.dev',
             'email_verified_at' => now(),
             'password' => Hash::make('PontaDev@2025'),
+            'remember_token' => null,
         ]);
     }
 }
