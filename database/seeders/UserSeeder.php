@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -15,6 +16,8 @@ class UserSeeder extends Seeder
             'name' => 'System',
             'username' => 'system',
             'email' => 'system@localhost',
+            'email_verified_at' => now(),
+            'password' => Hash::make(Str::random('16')),
         ]);
 
         // Seed admin user
