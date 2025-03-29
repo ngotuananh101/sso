@@ -30,5 +30,18 @@ class SettingSeeder extends Seeder
                 ]);
             }
         }
+
+        $settings = [
+            // App description
+            [
+                'key' => 'app_description',
+                'value' => 'Ponta SSO is a single sign-on solution that allows users to authenticate once and gain access to multiple applications without needing to log in again for each one.',
+            ],
+            // App keywords
+            [
+                'key' => 'app_keywords',
+                'value' => 'Ponta SSO, single sign-on, authentication, access control, user management',
+            ],
+        ];
     }
 }
