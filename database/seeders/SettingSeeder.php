@@ -25,8 +25,8 @@ class SettingSeeder extends Seeder
                 $value = trim($value, '"');
                 // Create a new setting in the database
                 Setting::create([
-                    'env' => strtolower(trim($key)),
-                    'key' => trim($key),
+                    'env' => trim($key),
+                    'key' => strtolower(trim($key)),
                     'value' => $value,
                 ]);
             }
@@ -56,7 +56,7 @@ class SettingSeeder extends Seeder
             // Logo
             [
                 'key' => 'logo',
-                'value' => 'https://ponta.dev/logo.png',
+                'value' => '/assets/media/logos/logo.png',
             ],
             // Default theme mode
             [
@@ -64,5 +64,12 @@ class SettingSeeder extends Seeder
                 'value' => 'system',
             ],
         ];
+
+        foreach ($settings as $setting) {
+            Setting::updateOrCreate(
+                ['key' => $setting['key']],
+                ['value' => $setting['value'],]
+            );
+        }
     }
 }

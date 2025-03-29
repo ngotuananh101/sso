@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\AuthController;
 /*
  * |--------------------------------------------------------------------------
@@ -12,39 +13,35 @@ use App\Http\Controllers\AuthController;
  * | @see https://laravel.com/docs/12.x/authentication
  * |
  */
+// Guest routes
 Route::group([
-    'prefix' => 'auth',
+    'middleware' => 'guest',
 ], function () {
-    // Guest routes
-    Route::group([
-        'middleware' => 'guest',
-    ], function () {
-        // Login
-        Route::get('login', [AuthController::class, 'login'])->name('login');
-        Route::post('login', [AuthController::class, 'authenticate']);
+    // Login
+    Route::get('login', [AuthController::class, 'login'])->name('login');
+    Route::post('login', [AuthController::class, 'authenticate']);
 
-        // Forgot password
-        Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
-        Route::post('forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+    // Forgot password
+    Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+    Route::post('forgot-password', [AuthController::class, 'sendResetLinkEmail']);
 
-        // Reset password
-        Route::get('reset-password/{token}', [AuthController::class, 'resetPassword'])->name('reset-password');
-        Route::post('reset-password', [AuthController::class, 'reset']);
-    });
+    // Reset password
+    Route::get('reset-password/{token}', [AuthController::class, 'resetPassword'])->name('reset-password');
+    Route::post('reset-password', [AuthController::class, 'reset']);
+});
 
-    // Authenticated routes
-    Route::group([
-        'middleware' => 'auth',
-    ], function () {
-        // Register
-        Route::get('register', [AuthController::class, 'register'])->name('register');
-        Route::post('register', [AuthController::class, 'store']);
+// Authenticated routes
+Route::group([
+    'middleware' => 'auth',
+], function () {
+    // Register
+    Route::get('register', [AuthController::class, 'register'])->name('register');
+    Route::post('register', [AuthController::class, 'store']);
 
-        // Logout
-        Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    // Logout
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-        // Verify email
-        Route::get('email/verify', [AuthController::class, 'verifyEmail'])->name('verification.notice');
-        Route::get('email/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify');
-    });
+    // Verify email
+    Route::get('email/verify', [AuthController::class, 'verifyEmail'])->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify');
 });
