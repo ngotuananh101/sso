@@ -19,15 +19,15 @@
                         <div class="py-8 py-md-0">
                             @include('components.translate_plugin')
                         </div>
-                        <div class="text-center text-muted d-flex gap-5">
+                        <div class="text-center text-muted d-flex gap-8">
                             <a href="#" class="link-warning fw-semibold fs-6">
-                                Privacy Policy
+                                Help
                             </a>
                             <a href="#" class="link-warning fw-semibold fs-6">
-                                Terms of Service
+                                Privacy
                             </a>
                             <a href="#" class="link-warning fw-semibold fs-6">
-                                Contact Us
+                                Terms
                             </a>
                         </div>
                     </div>
