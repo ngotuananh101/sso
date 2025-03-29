@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -23,7 +24,7 @@ class SettingSeeder extends Seeder
                 // Remove any surrounding quotes from the value
                 $value = trim($value, '"');
                 // Create a new setting in the database
-                \App\Models\Setting::create([
+                Setting::create([
                     'env' => strtolower(trim($key)),
                     'key' => trim($key),
                     'value' => $value,
@@ -34,13 +35,33 @@ class SettingSeeder extends Seeder
         $settings = [
             // App description
             [
-                'key' => 'app_description',
+                'key' => 'description',
                 'value' => 'Ponta SSO is a single sign-on solution that allows users to authenticate once and gain access to multiple applications without needing to log in again for each one.',
             ],
             // App keywords
             [
-                'key' => 'app_keywords',
+                'key' => 'keywords',
                 'value' => 'Ponta SSO, single sign-on, authentication, access control, user management',
+            ],
+            // App author
+            [
+                'key' => 'author',
+                'value' => 'PontaDev',
+            ],
+            // Favicon
+            [
+                'key' => 'favicon',
+                'value' => 'https://ponta.dev/favicon.png',
+            ],
+            // Logo
+            [
+                'key' => 'logo',
+                'value' => 'https://ponta.dev/logo.png',
+            ],
+            // Default theme mode
+            [
+                'key' => 'default_theme_mode',
+                'value' => 'system',
             ],
         ];
     }
